@@ -1,0 +1,364 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* Header */
+header {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    text-align: center;
+    padding: 30px 20px;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    font-weight: 300;
+}
+
+header p {
+    opacity: 0.9;
+    font-size: 1.1rem;
+}
+
+/* Main content */
+main {
+    padding: 30px;
+}
+
+/* Todo input section */
+.todo-input-section {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+#todoInput {
+    flex: 1;
+    padding: 15px 20px;
+    border: 2px solid #e1e8ed;
+    border-radius: 25px;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+#todoInput:focus {
+    border-color: #4facfe;
+    box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+}
+
+#addBtn {
+    padding: 15px 25px;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 80px;
+}
+
+#addBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+}
+
+#addBtn:active {
+    transform: translateY(0);
+}
+
+/* Todo controls */
+.todo-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.filter-btn {
+    padding: 8px 16px;
+    border: 2px solid #e1e8ed;
+    background: white;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.filter-btn:hover {
+    border-color: #4facfe;
+    color: #4facfe;
+}
+
+.filter-btn.active {
+    background: #4facfe;
+    border-color: #4facfe;
+    color: white;
+}
+
+.todo-stats {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Todo list */
+.todo-list {
+    list-style: none;
+    margin-bottom: 20px;
+}
+
+.todo-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #f0f0f0;
+    transition: all 0.3s ease;
+}
+
+.todo-item:hover {
+    background: #f8f9fa;
+    margin: 0 -15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    border-radius: 8px;
+}
+
+.todo-item.completed {
+    opacity: 0.6;
+}
+
+.todo-checkbox {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ddd;
+    border-radius: 50%;
+    margin-right: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.todo-checkbox:hover {
+    border-color: #4facfe;
+}
+
+.todo-checkbox.checked {
+    background: #4facfe;
+    border-color: #4facfe;
+}
+
+.todo-checkbox.checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.todo-text {
+    flex: 1;
+    font-size: 1rem;
+    line-height: 1.4;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.todo-text.completed {
+    text-decoration: line-through;
+    color: #999;
+}
+
+.todo-text.editing {
+    background: white;
+    border: 2px solid #4facfe;
+    border-radius: 5px;
+    padding: 5px 10px;
+    outline: none;
+}
+
+.todo-actions-btn {
+    display: flex;
+    gap: 5px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.todo-item:hover .todo-actions-btn {
+    opacity: 1;
+}
+
+.edit-btn, .delete-btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+}
+
+.edit-btn {
+    background: #ffeaa7;
+    color: #d63031;
+}
+
+.edit-btn:hover {
+    background: #fdcb6e;
+}
+
+.delete-btn {
+    background: #fab1a0;
+    color: #e17055;
+}
+
+.delete-btn:hover {
+    background: #e84393;
+    color: white;
+}
+
+/* Todo actions */
+.todo-actions {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.clear-btn {
+    padding: 10px 20px;
+    background: #fd79a8;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.clear-btn:hover {
+    background: #e84393;
+    transform: translateY(-2px);
+}
+
+.clear-btn:disabled {
+    background: #ddd;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    background: #f8f9fa;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #999;
+}
+
+.empty-state h3 {
+    margin-bottom: 10px;
+    font-weight: 300;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        margin: 10px;
+        border-radius: 10px;
+    }
+    
+    header h1 {
+        font-size: 2rem;
+    }
+    
+    main {
+        padding: 20px;
+    }
+    
+    .todo-input-section {
+        flex-direction: column;
+    }
+    
+    #addBtn {
+        align-self: stretch;
+    }
+    
+    .todo-controls {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+    
+    .filter-buttons {
+        justify-content: center;
+    }
+}
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.todo-item {
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+}
+
+.todo-item.removing {
+    animation: fadeOut 0.3s ease forwards;
+}
