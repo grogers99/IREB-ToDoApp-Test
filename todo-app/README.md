@@ -1,6 +1,24 @@
 # ToDo Application
 
-A modern, responsive ToDo application built with pure HTML, CSS, and JavaScript. Features a clean design, local storage persistence, and smooth animations.
+A modern, responsive ToDo application built with pure HTML, CSS, and JavaScript through AI-assisted development practices. This production-ready application demonstrates the power of AI-human collaboration in creating clean, maintainable code while delivering exceptional user experience.
+
+## AI-Assisted Development Showcase
+
+This application was developed using **Cline AI assistant** as part of the **IREB AI Special Interest Group** research into AI-assisted software development and requirements engineering. It demonstrates:
+
+- **Requirements-Driven Development** - Clear project brief guiding all implementation decisions
+- **AI-Human Collaboration** - Intelligent code generation with human oversight and refinement
+- **Modern Best Practices** - AI-suggested patterns for clean architecture and maintainable code
+- **Quality Assurance** - AI-assisted code review and optimization throughout development
+- **Comprehensive Documentation** - AI-generated technical documentation and user guides
+
+### Educational Value
+This project serves as a **practical reference** for:
+- Framework-free modern web development
+- AI-assisted development workflows
+- Clean architecture patterns
+- User-centered design principles
+- Production-ready code quality standards
 
 ## Features
 
@@ -113,14 +131,44 @@ The modular JavaScript structure makes it easy to extend:
 - High contrast ratios
 - Focus indicators
 
+## Project Documentation
+
+This application is part of a larger research project. For comprehensive documentation:
+
+- **[Main Project README](../README.md)** - Complete project overview and AI development methodology
+- **[Project Brief](../memory-bank/projectbrief.md)** - Project scope, requirements, and success criteria
+- **[Product Context](../memory-bank/productContext.md)** - User needs, problem statement, and solution approach
+- **[Technical Architecture](../memory-bank/systemPatterns.md)** - Design patterns and implementation details
+- **[Development Progress](../memory-bank/progress.md)** - Current status and completed features
+
+## AI Development Insights
+
+### What Makes This Code Special
+- **Clean Architecture** - Single-class design with clear separation of concerns
+- **Modern JavaScript** - ES6+ features used appropriately throughout
+- **Performance Optimized** - Event delegation and efficient DOM manipulation
+- **Security Conscious** - XSS protection and input validation
+- **Accessibility First** - Semantic HTML and keyboard navigation support
+
+### Reusable Patterns Demonstrated
+- **State Management Flow** - Consistent update pattern (State → Persist → Render)
+- **Event Delegation** - Efficient handling of dynamic content
+- **Template Generation** - Safe HTML creation with user input escaping
+- **Error Handling** - Graceful degradation for storage and edge cases
+
 ## License
 
 This project is open source and available under the MIT License.
 
 ## Contributing
 
-Feel free to submit issues, feature requests, or pull requests to improve this ToDo application!
+This project welcomes contributions and feedback:
+
+- **Issues** - Report bugs or suggest features via [GitHub Issues](https://github.com/grogers99/IREB-ToDoApp-Test/issues)
+- **Pull Requests** - Submit improvements or enhancements
+- **Research Feedback** - Share insights on AI-assisted development practices
+- **Educational Use** - Reference this code for learning modern web development
 
 ---
 
-**Enjoy staying organized with your new ToDo app! 🎉**
+**Experience AI-assisted development in action with a production-ready ToDo application! 🎉**

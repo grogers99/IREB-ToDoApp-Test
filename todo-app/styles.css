@@ -286,6 +286,62 @@ footer {
     font-size: 0.9rem;
 }
 
+/* Feedback section */
+.feedback-section {
+    background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+    padding: 25px 30px;
+    text-align: center;
+    border-top: 1px solid #e1e8ed;
+}
+
+.feedback-section h3 {
+    color: #495057;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.feedback-section p {
+    color: #6c757d;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.feedback-links {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.feedback-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background: #495057;
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: 2px solid #495057;
+}
+
+.feedback-btn:hover {
+    background: #343a40;
+    border-color: #343a40;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(73, 80, 87, 0.3);
+}
+
+.feedback-btn:active {
+    transform: translateY(0);
+}
+
 /* Empty state */
 .empty-state {
     text-align: center;
@@ -329,6 +385,30 @@ footer {
     
     .filter-buttons {
         justify-content: center;
+    }
+    
+    /* Feedback section responsive */
+    .feedback-section {
+        padding: 20px 15px;
+    }
+    
+    .feedback-section h3 {
+        font-size: 1.1rem;
+    }
+    
+    .feedback-section p {
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+    }
+    
+    .feedback-links {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .feedback-btn {
+        padding: 14px 20px;
+        font-size: 0.95rem;
     }
 }
 

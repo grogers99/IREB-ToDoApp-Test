@@ -3,23 +3,24 @@
 ## Why This Project Exists
 
 ### Problem Statement
-Users need a simple, reliable way to manage their daily tasks without the complexity of heavy applications or the dependency on external services. Many todo applications are either too complex with unnecessary features or require internet connectivity and user accounts.
+Users need a simple, reliable way to manage their daily tasks without the complexity of heavy applications or the dependency on external services. 
 
 ### Solution Approach
-Create a lightweight, fast, and intuitive todo application that works entirely in the browser, requires no setup, and provides all essential task management features with a modern, pleasant user interface.
+Create a lightweight, fast, and intuitive todo application that requires no setup, and provides all essential task management features with a modern, pleasant user interface.
 
 ## Target Users
 
 ### Primary Users
 - **Individual Task Managers**: People who need to organize personal tasks and daily activities
-- **Students**: Managing assignments, projects, and study schedules
 - **Professionals**: Tracking work tasks and project items
+- **Software Developers**: Prototyping solutions to better understand design options
+- **Requirements Engineers**: Prototyping solutions to better understand stakeholders' needs
 - **Anyone Seeking Simplicity**: Users who prefer clean, distraction-free interfaces
 
 ### User Characteristics
 - Comfortable with basic web applications
 - Value simplicity over complex feature sets
-- Need reliable data persistence without cloud dependency
+- Need adaptable and well-documented software design
 - Appreciate responsive design for multi-device usage
 - Expect modern, intuitive user interfaces
 

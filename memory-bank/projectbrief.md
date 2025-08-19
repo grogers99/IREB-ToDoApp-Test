@@ -1,7 +1,7 @@
 # Project Brief: IREB ToDo Application
 
 ## Project Overview
-A modern, responsive ToDo application built with pure HTML, CSS, and JavaScript. This project demonstrates clean architecture, modern web development practices, and user-centered design principles.
+This is a project to prototype solutions for a ToDo application, that also serves to explore AI-assisted software development practices and requirements engineering. It aims to develop a modern, responsive application built that demonstrates clean architecture, modern web development practices, and user-centered design principles.
 
 ## Core Requirements
 
@@ -31,13 +31,13 @@ A modern, responsive ToDo application built with pure HTML, CSS, and JavaScript.
 ## Project Goals
 
 ### Primary Goals
-1. **Demonstrate Modern Web Development**: Showcase best practices without frameworks
+1. **Demonstrate Modern Web Development with AI**: Showcase best practices for AI-assisted software development and requirements engineering
 2. **Create Reusable Patterns**: Establish patterns for similar applications
 3. **Ensure Maintainability**: Clean, documented, and extensible code
 4. **Optimize User Experience**: Fast, responsive, and intuitive interface
 
 ### Secondary Goals
-1. **Educational Value**: Serve as a reference for vanilla JavaScript applications
+1. **Educational Value**: Serve as a reference for AI-assisted web development
 2. **Performance Benchmark**: Demonstrate efficiency of pure web technologies
 3. **Accessibility Standard**: Meet modern accessibility requirements
 4. **Cross-platform Compatibility**: Work consistently across browsers and devices
