@@ -187,7 +187,8 @@ this.todos.filter(t => !t.completed)
     id: 1642518000000,           // Timestamp-based unique ID
     text: "Complete project",     // User-entered task text
     completed: false,            // Boolean completion status
-    createdAt: "2024-01-18T10:00:00.000Z"  // ISO timestamp
+    createdAt: "2024-01-18T10:00:00.000Z",  // ISO timestamp
+    dueDate: "2024-01-25"        // Optional due date (YYYY-MM-DD format)
 }
 
 // Application state
@@ -226,6 +227,31 @@ loadTodos() {
 2. **State Update** → Modify todos array
 3. **Persistence** → Save to localStorage
 4. **UI Update** → Re-render interface
+
+### Due Date Management
+```javascript
+// Date utility functions
+isOverdue(todo) {
+    if (!todo.dueDate || todo.completed) return false;
+    const today = new Date();
+    const dueDate = new Date(todo.dueDate);
+    today.setHours(0, 0, 0, 0);
+    dueDate.setHours(0, 0, 0, 0);
+    return dueDate < today;
+}
+
+formatDueDate(todo) {
+    if (!todo.dueDate) return '';
+    const today = new Date();
+    const dueDate = new Date(todo.dueDate);
+    const diffDays = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) return 'Due today';
+    if (diffDays === 1) return 'Due tomorrow';
+    if (diffDays < 0) return `Overdue by ${Math.abs(diffDays)} days`;
+    return `Due in ${diffDays} days`;
+}
+```
 
 ## Performance Considerations
 

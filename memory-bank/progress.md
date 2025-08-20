@@ -12,6 +12,9 @@ The IREB ToDo Application is **fully functional and production-ready**. All core
 - **Task Completion**: Toggle between active/completed states
 - **Inline Editing**: Double-click or button to edit todo text
 - **Bulk Operations**: Clear all completed todos at once
+- **Due Date Management**: Optional due dates with date picker interface
+- **Overdue Detection**: Automatic identification and highlighting of past-due tasks
+- **Smart Date Formatting**: Human-readable due date displays ("Due today", "Overdue by X days")
 
 ### ✅ User Interface
 - **Modern Design**: Clean, gradient-based UI with professional appearance
@@ -22,7 +25,7 @@ The IREB ToDo Application is **fully functional and production-ready**. All core
 
 ### ✅ User Experience
 - **Keyboard Shortcuts**: Enter to add, Escape to cancel, double-click to edit
-- **Filter System**: View All, Active, or Completed todos
+- **Filter System**: View All, Active, Completed, or Overdue todos
 - **Live Statistics**: Real-time counter showing remaining active todos
 - **Empty States**: Contextual messages for different filter views
 - **Input Validation**: Prevents empty todos, handles edge cases
@@ -71,10 +74,11 @@ The todo application meets all requirements specified in the project brief. No a
 
 ### Medium-Priority Enhancements
 4. **Extended Todo Features**
-   - Due dates and reminders
+   - ✅ Due dates and overdue detection (COMPLETED)
    - Priority levels (high, medium, low)
    - Categories or tags
    - Sub-tasks or nested todos
+   - Due date reminders and notifications
 
 5. **Data Management**
    - IndexedDB migration for better performance

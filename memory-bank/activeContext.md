@@ -20,6 +20,9 @@ The todo application is **fully functional and complete** with all core features
 - ✅ Keyboard shortcuts and accessibility
 - ✅ Filter system and bulk operations
 - ✅ Clean, modern UI with smooth interactions
+- ✅ Due date functionality with date picker interface
+- ✅ Overdue detection and visual highlighting
+- ✅ Smart date formatting and overdue filtering
 
 ## Recent Changes & Discoveries
 
