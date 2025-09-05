@@ -1,5 +1,3 @@
-[link to app](todo-app/index.html)
-
 # IREB ToDo Application
 
 A modern, responsive ToDo application that demonstrates AI-assisted software development practices and requirements engineering within the IREB AI Special Interest Group (IREB AI SIG). This project serves dual purposes: delivering a fully functional task management application while showcasing the impact of AI on software development processes.
@@ -14,7 +12,8 @@ This project explores AI-assisted software development and requirements engineer
 
 ## 🚀 Live Demo
 
-- **Application**: [View Live Demo](https://www.garethalanrogers.com/dev)
+- **Application**: [View Live Demo (Git Pages)](https://grogers99.github.io/IREB-ToDoApp-Test/))
+- **Application**: [View Live Demo (website)](https://www.garethalanrogers.com/dev)
 - **Repository**: [GitHub Repository](https://github.com/grogers99/IREB-ToDoApp-Test)
 
 ## ✨ Features
