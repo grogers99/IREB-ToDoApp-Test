@@ -12,7 +12,7 @@ This project explores AI-assisted software development and requirements engineer
 
 ## 🚀 Live Demo
 
-- **Application**: [View Live Demo (Git Pages)](https://grogers99.github.io/IREB-ToDoApp-Test/))
+- **Application**: [View Live Demo (Git Pages)](https://grogers99.github.io/IREB-ToDoApp-Test/)
 - **Application**: [View Live Demo (website)](https://www.garethalanrogers.com/dev)
 - **Repository**: [GitHub Repository](https://github.com/grogers99/IREB-ToDoApp-Test)
 
