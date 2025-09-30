@@ -10,9 +10,13 @@ The IREB ToDo Application is **fully functional and production-ready**. All core
 - **Task Management**: Create, read, update, delete todos
 - **State Persistence**: localStorage integration with error handling
 - **Task Completion**: Toggle between active/completed states
-- **Inline Editing**: Double-click or button to edit todo text
+- **Inline Editing**: Double-click or button to edit todo text and due dates
 - **Bulk Operations**: Clear all completed todos at once
 - **Due Date Management**: Optional due dates with date picker interface
+  - Add due dates when creating new todos
+  - Add due dates to existing todos via edit mode
+  - Edit existing due dates
+  - Remove due dates with clear button
 - **Overdue Detection**: Automatic identification and highlighting of past-due tasks
 - **Smart Date Formatting**: Human-readable due date displays ("Due today", "Overdue by X days")
 

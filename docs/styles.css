@@ -275,6 +275,52 @@ main {
     border-radius: 5px;
     padding: 5px 10px;
     outline: none;
+    width: 100%;
+}
+
+.edit-date-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.editing-date {
+    flex: 1;
+    padding: 8px 12px;
+    border: 2px solid #e1e8ed;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    outline: none;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.editing-date:focus {
+    border-color: #4facfe;
+    box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+}
+
+.clear-date-btn {
+    padding: 6px 10px;
+    background: #f8f9fa;
+    border: 2px solid #e1e8ed;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    color: #999;
+}
+
+.clear-date-btn:hover {
+    background: #e74c3c;
+    border-color: #e74c3c;
+    color: white;
 }
 
 .todo-content {

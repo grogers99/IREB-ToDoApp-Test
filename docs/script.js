@@ -151,22 +151,41 @@ class TodoApp {
         }
 
         this.editingId = id;
-        const todoElement = document.querySelector(`[data-id="${id}"] .todo-text`);
-        const currentText = todoElement.textContent;
+        const todo = this.todos.find(t => t.id === id);
+        const todoContent = document.querySelector(`[data-id="${id}"] .todo-content`);
+        const currentText = todo.text;
+        const currentDueDate = todo.dueDate || '';
         
-        todoElement.innerHTML = `<input type="text" class="todo-text editing" value="${currentText}" maxlength="100">`;
-        const input = todoElement.querySelector('input');
-        input.focus();
-        input.select();
+        todoContent.innerHTML = `
+            <input type="text" class="todo-text editing" value="${this.escapeHtml(currentText)}" maxlength="100">
+            <div class="edit-date-container">
+                <input type="date" class="date-input editing-date" value="${currentDueDate}">
+                <button type="button" class="clear-date-btn" title="Clear due date">✕</button>
+            </div>
+        `;
+        
+        const textInput = todoContent.querySelector('.todo-text.editing');
+        const dateInput = todoContent.querySelector('.editing-date');
+        const clearDateBtn = todoContent.querySelector('.clear-date-btn');
+        
+        textInput.focus();
+        textInput.select();
 
         const saveEdit = () => {
-            const newText = input.value.trim();
-            if (newText && newText !== currentText) {
-                const todo = this.todos.find(t => t.id === id);
-                if (todo) {
-                    todo.text = newText;
-                    this.saveTodos();
+            const newText = textInput.value.trim();
+            const newDueDate = dateInput.value;
+            
+            if (newText) {
+                todo.text = newText;
+                
+                // Update due date - set it if provided, remove it if cleared
+                if (newDueDate) {
+                    todo.dueDate = newDueDate;
+                } else {
+                    delete todo.dueDate;
                 }
+                
+                this.saveTodos();
             }
             this.editingId = null;
             this.render();
@@ -177,11 +196,57 @@ class TodoApp {
             this.render();
         };
 
-        input.addEventListener('blur', saveEdit);
-        input.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') saveEdit();
+        // Clear date button handler
+        clearDateBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dateInput.value = '';
+            textInput.focus();
         });
-        input.addEventListener('keydown', (e) => {
+
+        // Save on blur - only if focus moves outside the edit container
+        const handleBlur = (e) => {
+            setTimeout(() => {
+                // Check if focus is still within the edit inputs or clear button
+                const focusedElement = document.activeElement;
+                const isStillEditing = focusedElement === textInput || 
+                                      focusedElement === dateInput || 
+                                      focusedElement === clearDateBtn;
+                
+                if (!isStillEditing && this.editingId === id) {
+                    saveEdit();
+                }
+            }, 10);
+        };
+        
+        textInput.addEventListener('blur', handleBlur);
+        dateInput.addEventListener('blur', handleBlur);
+        clearDateBtn.addEventListener('blur', handleBlur);
+
+        // Save on Enter in text input
+        textInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                saveEdit();
+            }
+        });
+        
+        // Save on Enter in date input
+        dateInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                saveEdit();
+            }
+        });
+
+        // Cancel on Escape
+        textInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                cancelEdit();
+            }
+        });
+        
+        dateInput.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 e.preventDefault();
                 cancelEdit();

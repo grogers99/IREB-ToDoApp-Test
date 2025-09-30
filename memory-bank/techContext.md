@@ -251,6 +251,43 @@ formatDueDate(todo) {
     if (diffDays < 0) return `Overdue by ${Math.abs(diffDays)} days`;
     return `Due in ${diffDays} days`;
 }
+
+// Enhanced edit mode with due date editing (September 2025)
+editTodo(id) {
+    const todo = this.todos.find(t => t.id === id);
+    const todoContent = document.querySelector(`[data-id="${id}"] .todo-content`);
+    
+    // Create edit interface with both text and date inputs
+    todoContent.innerHTML = `
+        <input type="text" class="todo-text editing" value="${this.escapeHtml(todo.text)}">
+        <div class="edit-date-container">
+            <input type="date" class="date-input editing-date" value="${todo.dueDate || ''}">
+            <button type="button" class="clear-date-btn" title="Clear due date">✕</button>
+        </div>
+    `;
+    
+    // Smart blur detection - only save when focus leaves all edit elements
+    const handleBlur = (e) => {
+        setTimeout(() => {
+            const focusedElement = document.activeElement;
+            const isStillEditing = focusedElement === textInput || 
+                                  focusedElement === dateInput || 
+                                  focusedElement === clearDateBtn;
+            
+            if (!isStillEditing && this.editingId === id) {
+                // Save both text and date changes
+                todo.text = textInput.value.trim();
+                if (dateInput.value) {
+                    todo.dueDate = dateInput.value;
+                } else {
+                    delete todo.dueDate;
+                }
+                this.saveTodos();
+                this.render();
+            }
+        }, 10);
+    };
+}
 ```
 
 ## Performance Considerations
