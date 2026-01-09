@@ -1,13 +1,146 @@
 // ToDo App JavaScript
+
+// ============================================
+// DATA MODELS (Extended for Multi-User Support)
+// ============================================
+
+// User model for simulated multi-user support
+class User {
+    constructor(id, name, role, avatar = null) {
+        this.id = id;
+        this.name = name;
+        this.role = role; // 'manager' | 'team_member'
+        this.avatar = avatar;
+    }
+}
+
+// Extended Task model with assignment and subtask support
+class Task {
+    constructor(id, text, createdBy, assignedTo = null, parentTaskId = null) {
+        this.id = id;
+        this.text = text;
+        this.completed = false;
+        this.createdAt = new Date().toISOString();
+        this.createdBy = createdBy;  // User ID who created the task
+        this.assignedTo = assignedTo; // User ID assigned to (null = unassigned)
+        this.parentTaskId = parentTaskId; // For subtasks: ID of parent task
+    }
+}
+
+// ============================================
+// MAIN APPLICATION CLASS
+// ============================================
+
 class TodoApp {
     constructor() {
-        this.todos = this.loadTodos();
+        this.todos = [];
+        this.users = [];
+        this.currentUser = null;
         this.currentFilter = 'all';
         this.editingId = null;
+        this.currentView = 'personal'; // 'personal' | 'team'
+        
+        // Initialize data stores
+        this.initializeData();
         
         this.initializeElements();
         this.bindEvents();
         this.render();
+    }
+
+    // Initialize users and load todos
+    initializeData() {
+        this.loadUsers();
+        this.setCurrentUser(this.users[0]); // Default to first user
+        this.todos = this.loadTodos();
+    }
+
+    // User Management Methods
+    loadUsers() {
+        try {
+            const stored = localStorage.getItem('users');
+            if (stored) {
+                this.users = JSON.parse(stored);
+            } else {
+                // Initialize with sample users
+                this.users = [
+                    new User(1, 'Alice Manager', 'manager'),
+                    new User(2, 'Bob Developer', 'team_member'),
+                    new User(3, 'Carol Designer', 'team_member'),
+                    new User(4, 'Dave Tester', 'team_member')
+                ];
+                this.saveUsers();
+            }
+        } catch (error) {
+            console.error('Failed to load users:', error);
+            // Fallback to default users
+            this.users = [
+                new User(1, 'Alice Manager', 'manager'),
+                new User(2, 'Bob Developer', 'team_member'),
+                new User(3, 'Carol Designer', 'team_member'),
+                new User(4, 'Dave Tester', 'team_member')
+            ];
+        }
+    }
+
+    saveUsers() {
+        try {
+            localStorage.setItem('users', JSON.stringify(this.users));
+        } catch (error) {
+            console.error('Failed to save users:', error);
+        }
+    }
+
+    setCurrentUser(user) {
+        this.currentUser = user;
+        try {
+            localStorage.setItem('currentUserId', user.id);
+        } catch (error) {
+            console.error('Failed to save current user:', error);
+        }
+        this.renderUserIndicator();
+    }
+
+    getCurrentUser() {
+        return this.currentUser;
+    }
+
+    getAllUsers() {
+        return this.users;
+    }
+
+    getTeamMembers() {
+        return this.users.filter(u => u.role === 'team_member');
+    }
+
+    getUserById(id) {
+        return this.users.find(u => u.id === id);
+    }
+
+    renderUserIndicator() {
+        const indicator = document.getElementById('currentUserIndicator');
+        if (indicator && this.currentUser) {
+            indicator.textContent = `Logged in as: ${this.currentUser.name} (${this.currentUser.role})`;
+        }
+    }
+
+    renderUserSelect() {
+        const select = document.getElementById('userSelect');
+        if (!select) return;
+        
+        select.innerHTML = this.users.map(user => 
+            `<option value="${user.id}" ${this.currentUser?.id === user.id ? 'selected' : ''}>${this.escapeHtml(user.name)} (${user.role})</option>`
+        ).join('');
+    }
+
+    renderAssigneeSelect() {
+        if (!this.assigneeSelect) return;
+        
+        // Populate with team members
+        this.assigneeSelect.innerHTML = '<option value="">Unassigned</option>' + 
+            this.getTeamMembers().map(user => 
+                `<option value="${user.id}">${this.escapeHtml(user.name)}</option>`
+            ).join('');
     }
 
     initializeElements() {
@@ -17,6 +150,9 @@ class TodoApp {
         this.todoCount = document.getElementById('todoCount');
         this.filterBtns = document.querySelectorAll('.filter-btn');
         this.clearCompletedBtn = document.getElementById('clearCompleted');
+        this.userSelect = document.getElementById('userSelect');
+        this.viewToggle = document.getElementById('viewToggle');
+        this.assigneeSelect = document.getElementById('assigneeSelect');
     }
 
     bindEvents() {
@@ -35,6 +171,25 @@ class TodoApp {
 
         // Clear completed event
         this.clearCompletedBtn.addEventListener('click', () => this.clearCompleted());
+
+        // User selection event
+        if (this.userSelect) {
+            this.userSelect.addEventListener('change', (e) => {
+                const userId = parseInt(e.target.value);
+                const user = this.getUserById(userId);
+                if (user) {
+                    this.setCurrentUser(user);
+                    this.render();
+                }
+            });
+        }
+
+        // View toggle event
+        if (this.viewToggle) {
+            this.viewToggle.addEventListener('click', () => {
+                this.toggleView();
+            });
+        }
 
         // Todo list events (using event delegation)
         this.todoList.addEventListener('click', (e) => {
@@ -74,20 +229,38 @@ class TodoApp {
         });
     }
 
+    // View management
+    toggleView() {
+        this.currentView = this.currentView === 'personal' ? 'team' : 'personal';
+        this.render();
+    }
+
+    getCurrentView() {
+        return this.currentView;
+    }
+
     // Todo CRUD operations
     addTodo() {
         const text = this.todoInput.value.trim();
         if (!text) return;
 
+        const assigneeId = this.assigneeSelect ? parseInt(this.assigneeSelect.value) || null : null;
+
         const todo = {
             id: Date.now(),
             text: text,
             completed: false,
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString(),
+            createdBy: this.currentUser ? this.currentUser.id : 1,
+            assignedTo: assigneeId,
+            parentTaskId: null
         };
 
         this.todos.unshift(todo);
         this.todoInput.value = '';
+        if (this.assigneeSelect) {
+            this.assigneeSelect.value = '';
+        }
         this.saveTodos();
         this.render();
     }
@@ -106,7 +279,8 @@ class TodoApp {
         if (todoElement) {
             todoElement.classList.add('removing');
             setTimeout(() => {
-                this.todos = this.todos.filter(t => t.id !== id);
+                // Also delete subtasks
+                this.todos = this.todos.filter(t => t.id !== id && t.parentTaskId !== id);
                 this.saveTodos();
                 this.render();
             }, 300);
@@ -194,14 +368,41 @@ class TodoApp {
     }
 
     getFilteredTodos() {
+        let filtered = this.todos;
+        
+        // Filter by view
+        if (this.currentView === 'personal') {
+            // Show tasks created by or assigned to current user
+            filtered = filtered.filter(t => 
+                t.createdBy === this.currentUser?.id || 
+                t.assignedTo === this.currentUser?.id
+            );
+        }
+        
+        // Filter by status
         switch (this.currentFilter) {
             case 'active':
-                return this.todos.filter(t => !t.completed);
+                return filtered.filter(t => !t.completed);
             case 'completed':
-                return this.todos.filter(t => t.completed);
+                return filtered.filter(t => t.completed);
             default:
-                return this.todos;
+                return filtered;
         }
+    }
+
+    // Get tasks for a specific user (for manager view)
+    getTasksForUser(userId) {
+        return this.todos.filter(t => t.assignedTo === userId);
+    }
+
+    // Get subtasks for a task
+    getSubtasks(parentId) {
+        return this.todos.filter(t => t.parentTaskId === parentId);
+    }
+
+    // Get root tasks (tasks without parent)
+    getRootTasks() {
+        return this.todos.filter(t => t.parentTaskId === null);
     }
 
     // Rendering
@@ -209,6 +410,19 @@ class TodoApp {
         this.renderTodos();
         this.updateStats();
         this.updateClearButton();
+        this.renderUserIndicator();
+        this.renderUserSelect();
+        this.renderAssigneeSelect();
+        this.renderViewToggle();
+    }
+
+    renderViewToggle() {
+        const toggle = document.getElementById('viewToggle');
+        if (toggle) {
+            const isManager = this.currentUser?.role === 'manager';
+            toggle.style.display = isManager ? 'block' : 'none';
+            toggle.textContent = this.currentView === 'personal' ? 'View Team' : 'View My Tasks';
+        }
     }
 
     renderTodos() {
@@ -219,14 +433,57 @@ class TodoApp {
             return;
         }
 
-        this.todoList.innerHTML = filteredTodos.map(todo => this.createTodoHTML(todo)).join('');
+        if (this.currentView === 'team' && this.currentUser?.role === 'manager') {
+            this.renderTeamView();
+        } else {
+            this.todoList.innerHTML = filteredTodos.map(todo => this.createTodoHTML(todo)).join('');
+        }
+    }
+
+    renderTeamView() {
+        // Group tasks by team member
+        const teamMembers = this.getTeamMembers();
+        let html = '';
+        
+        teamMembers.forEach(member => {
+            const memberTasks = this.getTasksForUser(member.id);
+            const activeCount = memberTasks.filter(t => !t.completed).length;
+            const completedCount = memberTasks.filter(t => t.completed).length;
+            
+            html += `
+                <li class="team-member-group" data-user-id="${member.id}">
+                    <div class="team-member-header">
+                        <h3 class="team-member-name">${this.escapeHtml(member.name)}</h3>
+                        <span class="team-stats">${activeCount} active, ${completedCount} completed</span>
+                    </div>
+                    <ul class="team-tasks">
+                        ${memberTasks.length > 0 
+                            ? memberTasks.map(todo => this.createTodoHTML(todo)).join('')
+                            : '<li class="no-tasks">No tasks assigned</li>'
+                        }
+                    </ul>
+                </li>
+            `;
+        });
+        
+        this.todoList.innerHTML = html;
     }
 
     createTodoHTML(todo) {
+        const assignee = this.getUserById(todo.assignedTo);
+        const creator = this.getUserById(todo.createdBy);
+        const isSubtask = todo.parentTaskId !== null;
+        const subtasks = this.getSubtasks(todo.id);
+        
         return `
-            <li class="todo-item ${todo.completed ? 'completed' : ''}" data-id="${todo.id}">
+            <li class="todo-item ${todo.completed ? 'completed' : ''} ${isSubtask ? 'subtask' : ''}" data-id="${todo.id}" data-parent="${todo.parentTaskId || ''}">
                 <div class="todo-checkbox ${todo.completed ? 'checked' : ''}" data-action="toggle"></div>
                 <span class="todo-text ${todo.completed ? 'completed' : ''}" data-action="edit">${this.escapeHtml(todo.text)}</span>
+                <div class="todo-meta">
+                    ${assignee ? `<span class="assigned-to">Assigned to: ${this.escapeHtml(assignee.name)}</span>` : ''}
+                    ${creator && creator.id !== todo.assignedTo ? `<span class="created-by">Created by: ${this.escapeHtml(creator.name)}</span>` : ''}
+                    ${subtasks.length > 0 ? `<span class="subtask-count">${subtasks.length} subtask${subtasks.length > 1 ? 's' : ''}</span>` : ''}
+                </div>
                 <div class="todo-actions-btn">
                     <button class="edit-btn" data-action="edit">Edit</button>
                     <button class="delete-btn" data-action="delete">Delete</button>
@@ -255,8 +512,9 @@ class TodoApp {
 
 
     updateStats() {
-        const activeTodos = this.todos.filter(t => !t.completed).length;
-        const totalTodos = this.todos.length;
+        const filteredTodos = this.getFilteredTodos();
+        const activeTodos = filteredTodos.filter(t => !t.completed).length;
+        const totalTodos = filteredTodos.length;
         
         let statsText = '';
         if (totalTodos === 0) {
@@ -273,7 +531,8 @@ class TodoApp {
     }
 
     updateClearButton() {
-        const completedCount = this.todos.filter(t => t.completed).length;
+        const filteredTodos = this.getFilteredTodos();
+        const completedCount = filteredTodos.filter(t => t.completed).length;
         this.clearCompletedBtn.disabled = completedCount === 0;
         this.clearCompletedBtn.textContent = completedCount > 0 ? 
             `Clear Completed (${completedCount})` : 
@@ -330,6 +589,5 @@ if ('serviceWorker' in navigator) {
         // Uncomment the following lines if you want to add a service worker
         // navigator.serviceWorker.register('/sw.js')
         //     .then(registration => console.log('SW registered'))
-        //     .catch(error => console.log('SW registration failed'));
     });
 }

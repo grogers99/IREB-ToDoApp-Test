@@ -12,10 +12,27 @@
             <h1>ToDo App</h1>
             <p>Stay organized and get things done!</p>
         </header>
+        
+        <!-- User Selection Section -->
+        <div class="user-section">
+            <div class="user-info">
+                <span id="currentUserIndicator">Select a user</span>
+            </div>
+            <div class="user-selector">
+                <label for="userSelect">Switch User:</label>
+                <select id="userSelect">
+                    <!-- Options populated by JavaScript -->
+                </select>
+            </div>
+            <button id="viewToggle" class="view-toggle-btn" style="display: none;">View Team</button>
+        </div>
 
         <main>
             <div class="todo-input-section">
                 <input type="text" id="todoInput" placeholder="What needs to be done?" maxlength="100">
+                <select id="assigneeSelect" class="assignee-select">
+                    <option value="">Unassigned</option>
+                </select>
                 <button id="addBtn">Add</button>
             </div>
 

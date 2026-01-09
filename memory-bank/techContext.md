@@ -182,19 +182,33 @@ this.todos.filter(t => !t.completed)
 
 ### Data Structure
 ```javascript
-// Todo object structure
+// User object structure
+{
+    id: 1,
+    name: "Alice Manager",
+    role: "manager",            // 'manager' | 'team_member'
+    avatar: null                // Optional avatar URL
+}
+
+// Extended Task object structure
 {
     id: 1642518000000,           // Timestamp-based unique ID
     text: "Complete project",     // User-entered task text
     completed: false,            // Boolean completion status
-    createdAt: "2024-01-18T10:00:00.000Z"  // ISO timestamp
+    createdAt: "2024-01-18T10:00:00.000Z",  // ISO timestamp
+    createdBy: 1,               // User ID who created the task
+    assignedTo: 2,              // User ID assigned to (null = unassigned)
+    parentTaskId: null          // ID of parent task for subtasks
 }
 
 // Application state
 {
     todos: [],                   // Array of todo objects
+    users: [],                   // Array of User objects
+    currentUser: null,           // Currently logged in user
     currentFilter: 'all',        // Current filter state
-    editingId: null             // ID of todo being edited
+    editingId: null,             // ID of todo being edited
+    currentView: 'personal'      // 'personal' | 'team'
 }
 ```
 
@@ -296,5 +310,73 @@ createTodoHTML(todo) {
 - **File Upload**: Direct file transfer
 - **No Build Step**: Files ready for production
 - **Version Control**: Git-based deployment workflows
+
+## Multi-User Support Extension
+
+### New Classes Added
+```javascript
+// User model for simulated multi-user support
+class User {
+    constructor(id, name, role, avatar = null) {
+        this.id = id;
+        this.name = name;
+        this.role = role; // 'manager' | 'team_member'
+        this.avatar = avatar;
+    }
+}
+
+// Extended Task model with assignment and subtask support
+class Task {
+    constructor(id, text, createdBy, assignedTo = null, parentTaskId = null) {
+        this.id = id;
+        this.text = text;
+        this.completed = false;
+        this.createdAt = new Date().toISOString();
+        this.createdBy = createdBy;  // User ID who created the task
+        this.assignedTo = assignedTo; // User ID assigned to (null = unassigned)
+        this.parentTaskId = parentTaskId; // For subtasks: ID of parent task
+    }
+}
+```
+
+### New Storage Keys
+- **`users`**: Array of User objects stored in localStorage
+- **`currentUserId`**: ID of currently logged in user
+
+### New UI Elements
+- **`#currentUserIndicator`**: Displays current user name and role
+- **`#userSelect`**: Dropdown to switch between users
+- **`#viewToggle`**: Button for managers to toggle team view
+- **`#assigneeSelect`**: Dropdown to assign tasks to team members
+
+### New CSS Classes
+- **`.user-section`**: Container for user selection UI
+- **`.user-info`**: Current user indicator styling
+- **`.user-selector`**: User dropdown container
+- **`.assignee-select`**: Task assignment dropdown
+- **`.view-toggle-btn`**: Team view toggle button
+- **`.team-member-group`**: Container for team member's tasks
+- **`.team-member-header`**: Team member name and stats
+- **`.team-tasks`**: List of tasks for a team member
+- **`.todo-meta`**: Task metadata (assignee, creator, subtask count)
+- **`.todo-item.subtask`**: Subtask visual styling
+
+### New JavaScript Methods
+- `loadUsers()`, `saveUsers()`: User data management
+- `setCurrentUser(user)`, `getCurrentUser()`: User session
+- `getTeamMembers()`: Get all team members
+- `getUserById(id)`: Lookup user by ID
+- `renderUserIndicator()`, `renderUserSelect()`: User UI rendering
+- `renderAssigneeSelect()`: Task assignment dropdown
+- `toggleView()`, `getCurrentView()`: View management
+- `getTasksForUser(userId)`: Get tasks assigned to user
+- `getSubtasks(parentId)`: Get subtasks of a task
+- `renderTeamView()`: Render manager dashboard view
+
+### Sample Users (Initialized)
+1. Alice Manager (role: manager)
+2. Bob Developer (role: team_member)
+3. Carol Designer (role: team_member)
+4. Dave Tester (role: team_member)
 
 This technical foundation provides a robust, maintainable, and performant todo application using modern web standards.
