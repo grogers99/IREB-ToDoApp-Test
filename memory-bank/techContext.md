@@ -379,4 +379,32 @@ class Task {
 3. Carol Designer (role: team_member)
 4. Dave Tester (role: team_member)
 
+## Subtask Management Extension
+
+### New Methods Added
+- `addSubtask(parentId)`: Opens modal to create subtask with custom assignment
+- `openEditSubtaskModal(todo)`: Opens modal to edit subtask title and assignee
+- `getSubtaskProgress(parentId)`: Calculates completion progress for subtasks
+- `createSubtaskHTML(todo)`: Renders simplified subtask HTML without nested subtasks
+
+### Subtask Data Flow
+1. **Creation**: User clicks "+ Subtask" button → Modal appears → User enters title and selects assignee → Subtask created with parentTaskId
+2. **Editing**: User clicks "Edit" on subtask → Modal appears with current title/assignee → Changes saved to subtask
+3. **Display**: Parent tasks render with nested `.subtask-list` containing subtasks with light gray background
+4. **Deletion**: Deleting parent task cascades to delete all associated subtasks
+
+### Modal System
+- `addSubtask()` creates `#subtaskModal` for new subtask creation
+- `openEditSubtaskModal()` creates `#editSubtaskModal` for editing subtasks
+- Both modals include title input and assignee dropdown
+- Click outside modal or Cancel button closes modal
+- Enter key confirms submission
+
+### CSS Extensions for Subtasks
+- `.subtask-container`: Wraps parent task and its subtasks
+- `.parent-task`: Parent task styling with border and rounded corners
+- `.subtask-wrapper`: Indented container (40px left margin) for subtask list
+- `.subtask-list`: Light gray background (#f0f4f8) with blue left border
+- `.modal-overlay`, `.modal-content`: Modal styling for subtask creation/editing
+
 This technical foundation provides a robust, maintainable, and performant todo application using modern web standards.

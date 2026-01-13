@@ -14,7 +14,7 @@ body {
 }
 
 .container {
-    max-width: 600px;
+    max-width: 900px;
     margin: 0 auto;
     background: white;
     border-radius: 15px;
@@ -560,18 +560,151 @@ footer {
     font-style: italic;
 }
 
-/* Subtask styling */
-.todo-item.subtask {
-    margin-left: 30px;
+/* Subtask container - wraps parent task and its subtasks */
+.subtask-container {
+    margin-bottom: 10px;
+}
+
+/* Parent task styling */
+.todo-item.parent-task {
+    background: white;
+    border: 1px solid #e1e8ed;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 0;
+}
+
+.todo-item.parent-task:hover {
+    background: #f8f9fa;
+    margin: 0;
+    padding: 15px;
+}
+
+.todo-item.parent-task + .subtask-wrapper {
+    margin-top: 0;
+}
+
+/* Subtask wrapper - contains the subtask list with visual distinction */
+.subtask-wrapper {
+    margin-left: 40px;
+    margin-top: 2px;
+    margin-bottom: 10px;
+}
+
+/* Subtask list container with light gray background */
+.subtask-list {
+    list-style: none;
+    margin: 0;
+    padding: 10px 15px;
+    background: #f0f4f8;
+    border-radius: 8px;
     border-left: 3px solid #4facfe;
 }
 
-.todo-item.subtask::before {
-    content: '↳';
-    position: absolute;
-    left: 10px;
-    color: #4facfe;
-    font-size: 1.2rem;
+.subtask-list .todo-item {
+    background: transparent;
+    border-bottom: 1px solid #e1e8ed;
+    padding: 10px 0;
+    margin-bottom: 0;
+}
+
+.subtask-list .todo-item:last-child {
+    border-bottom: none;
+}
+
+.subtask-list .todo-item:hover {
+    background: rgba(79, 172, 254, 0.05);
+    margin: 0 -15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    border-radius: 6px;
+}
+
+.subtask-list .todo-checkbox {
+    width: 18px;
+    height: 18px;
+    margin-right: 12px;
+}
+
+.subtask-list .todo-text {
+    font-size: 0.95rem;
+}
+
+.subtask-list .todo-meta {
+    font-size: 0.7rem;
+    min-width: 100px;
+}
+
+.subtask-list .todo-actions-btn {
+    opacity: 1;
+}
+
+/* Todo content layout */
+.todo-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.todo-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.todo-main .todo-text {
+    flex: 1;
+    min-width: 150px;
+}
+
+/* Add subtask button */
+.add-subtask-btn {
+    padding: 6px 14px;
+    background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.add-subtask-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(0, 184, 148, 0.4);
+}
+
+/* Subtask progress bar */
+.subtask-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 6px;
+    background: #e9ecef;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    font-size: 0.75rem;
+    color: #666;
+    white-space: nowrap;
 }
 
 /* Animations */
@@ -603,4 +736,106 @@ footer {
 
 .todo-item.removing {
     animation: fadeOut 0.3s ease forwards;
+}
+
+/* Modal styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h3 {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 1.3rem;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.modal-body label {
+    font-weight: 600;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.modal-body input,
+.modal-body select {
+    padding: 12px 15px;
+    border: 2px solid #e1e8ed;
+    border-radius: 10px;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.modal-body input:focus,
+.modal-body select:focus {
+    border-color: #4facfe;
+}
+
+.modal-body .hint {
+    font-size: 0.8rem;
+    color: #999;
+    font-style: italic;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.cancel-btn {
+    padding: 10px 20px;
+    background: #e9ecef;
+    color: #666;
+    border: none;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cancel-btn:hover {
+    background: #dee2e6;
+}
+
+.confirm-btn {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.confirm-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
 }

@@ -209,6 +209,12 @@ class TodoApp {
                 case 'delete':
                     this.deleteTodo(id);
                     break;
+                case 'add-subtask':
+                    this.addSubtask(id);
+                    break;
+                case 'expand':
+                    this.toggleExpand(id);
+                    break;
             }
         });
 
@@ -265,6 +271,95 @@ class TodoApp {
         this.render();
     }
 
+    // Subtask creation
+    addSubtask(parentId) {
+        const parentTodo = this.todos.find(t => t.id === parentId);
+        if (!parentTodo) return;
+
+        // Get parent assignee name for display
+        const parentAssignee = parentTodo.assignedTo ? this.getUserById(parentTodo.assignedTo) : null;
+        const parentAssigneeName = parentAssignee ? parentAssignee.name : 'Unassigned';
+
+        // Create a modal for subtask creation
+        const teamMembers = this.getTeamMembers();
+        const assigneeOptions = teamMembers.map(m => 
+            `<option value="${m.id}" ${m.id === parentTodo.assignedTo ? 'selected' : ''}>${this.escapeHtml(m.name)}</option>`
+        ).join('');
+
+        const subtaskHtml = `
+            <div class="modal-overlay" id="subtaskModal">
+                <div class="modal-content">
+                    <h3>Add Subtask</h3>
+                    <div class="modal-body">
+                        <label>Title:</label>
+                        <input type="text" id="subtaskTitle" maxlength="100" placeholder="Enter subtask title">
+                        <label>Assigned To:</label>
+                        <select id="subtaskAssignee">
+                            <option value="">Unassigned</option>
+                            ${assigneeOptions}
+                        </select>
+                        <p class="hint">Defaults to parent task assignee (${parentAssigneeName})</p>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="cancel-btn" id="cancelSubtask">Cancel</button>
+                        <button class="confirm-btn" id="confirmSubtask">Add Subtask</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.insertAdjacentHTML('beforeend', subtaskHtml);
+        
+        const modal = document.getElementById('subtaskModal');
+        const titleInput = document.getElementById('subtaskTitle');
+        const assigneeSelect = document.getElementById('subtaskAssignee');
+        const cancelBtn = document.getElementById('cancelSubtask');
+        const confirmBtn = document.getElementById('confirmSubtask');
+
+        // Focus title input
+        setTimeout(() => titleInput.focus(), 100);
+
+        const closeModal = () => {
+            modal.remove();
+        };
+
+        const confirmSubtask = () => {
+            const text = titleInput.value.trim();
+            if (!text) {
+                titleInput.focus();
+                return;
+            }
+
+            const assigneeId = assigneeSelect.value ? parseInt(assigneeSelect.value) : null;
+
+            const subtask = {
+                id: Date.now(),
+                text: text,
+                completed: false,
+                createdAt: new Date().toISOString(),
+                createdBy: this.currentUser ? this.currentUser.id : 1,
+                assignedTo: assigneeId,
+                parentTaskId: parentId
+            };
+
+            this.todos.unshift(subtask);
+            this.saveTodos();
+            this.render();
+            closeModal();
+        };
+
+        cancelBtn.addEventListener('click', closeModal);
+        confirmBtn.addEventListener('click', confirmSubtask);
+        
+        titleInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') confirmSubtask();
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+    }
+
     toggleTodo(id) {
         const todo = this.todos.find(t => t.id === id);
         if (todo) {
@@ -292,9 +387,20 @@ class TodoApp {
             this.cancelEdit();
         }
 
-        this.editingId = id;
+        const todo = this.todos.find(t => t.id === id);
+        if (!todo) return;
+
+        const isSubtask = todo.parentTaskId !== null;
+        const currentText = todo.text;
+        
+        // For subtasks, show a modal with title and assignee
+        if (isSubtask) {
+            this.openEditSubtaskModal(todo);
+            return;
+        }
+
+        // For parent tasks, use inline editing
         const todoElement = document.querySelector(`[data-id="${id}"] .todo-text`);
-        const currentText = todoElement.textContent;
         
         todoElement.innerHTML = `<input type="text" class="todo-text editing" value="${currentText}" maxlength="100">`;
         const input = todoElement.querySelector('input');
@@ -304,11 +410,8 @@ class TodoApp {
         const saveEdit = () => {
             const newText = input.value.trim();
             if (newText && newText !== currentText) {
-                const todo = this.todos.find(t => t.id === id);
-                if (todo) {
-                    todo.text = newText;
-                    this.saveTodos();
-                }
+                todo.text = newText;
+                this.saveTodos();
             }
             this.editingId = null;
             this.render();
@@ -328,6 +431,76 @@ class TodoApp {
                 e.preventDefault();
                 cancelEdit();
             }
+        });
+    }
+
+    // Open modal for editing subtask (title + assignee)
+    openEditSubtaskModal(todo) {
+        const teamMembers = this.getTeamMembers();
+        const assigneeOptions = teamMembers.map(m => 
+            `<option value="${m.id}" ${m.id === todo.assignedTo ? 'selected' : ''}>${this.escapeHtml(m.name)}</option>`
+        ).join('');
+
+        const editHtml = `
+            <div class="modal-overlay" id="editSubtaskModal">
+                <div class="modal-content">
+                    <h3>Edit Subtask</h3>
+                    <div class="modal-body">
+                        <label>Title:</label>
+                        <input type="text" id="editSubtaskTitle" maxlength="100" value="${this.escapeHtml(todo.text)}">
+                        <label>Assigned To:</label>
+                        <select id="editSubtaskAssignee">
+                            <option value="">Unassigned</option>
+                            ${assigneeOptions}
+                        </select>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="cancel-btn" id="cancelEditSubtask">Cancel</button>
+                        <button class="confirm-btn" id="saveEditSubtask">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.insertAdjacentHTML('beforeend', editHtml);
+        
+        const modal = document.getElementById('editSubtaskModal');
+        const titleInput = document.getElementById('editSubtaskTitle');
+        const assigneeSelect = document.getElementById('editSubtaskAssignee');
+        const cancelBtn = document.getElementById('cancelEditSubtask');
+        const saveBtn = document.getElementById('saveEditSubtask');
+
+        setTimeout(() => titleInput.focus(), 100);
+        titleInput.select();
+
+        const closeModal = () => {
+            modal.remove();
+        };
+
+        const saveChanges = () => {
+            const newText = titleInput.value.trim();
+            if (!newText) {
+                titleInput.focus();
+                return;
+            }
+
+            todo.text = newText;
+            todo.assignedTo = assigneeSelect.value ? parseInt(assigneeSelect.value) : null;
+            
+            this.saveTodos();
+            this.render();
+            closeModal();
+        };
+
+        cancelBtn.addEventListener('click', closeModal);
+        saveBtn.addEventListener('click', saveChanges);
+        
+        titleInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') saveChanges();
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
         });
     }
 
@@ -405,6 +578,31 @@ class TodoApp {
         return this.todos.filter(t => t.parentTaskId === null);
     }
 
+    // Expand/collapse subtasks
+    toggleExpand(taskId) {
+        const element = document.querySelector(`[data-id="${taskId}"]`);
+        if (element) {
+            element.classList.toggle('expanded');
+        }
+    }
+
+    // Get parent task
+    getParentTask(subtaskId) {
+        const subtask = this.todos.find(t => t.id === subtaskId);
+        if (subtask && subtask.parentTaskId) {
+            return this.todos.find(t => t.id === subtask.parentTaskId);
+        }
+        return null;
+    }
+
+    // Calculate subtask progress for a parent task
+    getSubtaskProgress(parentId) {
+        const subtasks = this.getSubtasks(parentId);
+        if (subtasks.length === 0) return null;
+        const completed = subtasks.filter(t => t.completed).length;
+        return { completed, total: subtasks.length, percentage: Math.round((completed / subtasks.length) * 100) };
+    }
+
     // Rendering
     render() {
         this.renderTodos();
@@ -436,7 +634,9 @@ class TodoApp {
         if (this.currentView === 'team' && this.currentUser?.role === 'manager') {
             this.renderTeamView();
         } else {
-            this.todoList.innerHTML = filteredTodos.map(todo => this.createTodoHTML(todo)).join('');
+            // Render root tasks with their subtasks nested
+            const rootTasks = filteredTodos.filter(t => t.parentTaskId === null);
+            this.todoList.innerHTML = rootTasks.map(todo => this.createTodoHTML(todo)).join('');
         }
     }
 
@@ -474,19 +674,85 @@ class TodoApp {
         const creator = this.getUserById(todo.createdBy);
         const isSubtask = todo.parentTaskId !== null;
         const subtasks = this.getSubtasks(todo.id);
+        const progress = this.getSubtaskProgress(todo.id);
+        
+        // Generate subtask HTML if this is a parent task
+        let subtasksHtml = '';
+        if (subtasks.length > 0) {
+            subtasksHtml = `
+                <div class="subtask-wrapper">
+                    <ul class="subtask-list">
+                        ${subtasks.map(subtask => this.createSubtaskHTML(subtask)).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+        
+        // Parent task actions
+        let parentActions = '';
+        if (!isSubtask) {
+            parentActions = `<button class="add-subtask-btn" data-action="add-subtask">+ Subtask</button>`;
+        }
+        
+        // Progress bar
+        let progressHtml = '';
+        if (progress) {
+            progressHtml = `
+                <div class="subtask-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progress.percentage}%"></div>
+                    </div>
+                    <span class="progress-text">${progress.completed}/${progress.total} (${progress.percentage}%)</span>
+                </div>
+            `;
+        }
         
         return `
-            <li class="todo-item ${todo.completed ? 'completed' : ''} ${isSubtask ? 'subtask' : ''}" data-id="${todo.id}" data-parent="${todo.parentTaskId || ''}">
-                <div class="todo-checkbox ${todo.completed ? 'checked' : ''}" data-action="toggle"></div>
-                <span class="todo-text ${todo.completed ? 'completed' : ''}" data-action="edit">${this.escapeHtml(todo.text)}</span>
-                <div class="todo-meta">
-                    ${assignee ? `<span class="assigned-to">Assigned to: ${this.escapeHtml(assignee.name)}</span>` : ''}
-                    ${creator && creator.id !== todo.assignedTo ? `<span class="created-by">Created by: ${this.escapeHtml(creator.name)}</span>` : ''}
-                    ${subtasks.length > 0 ? `<span class="subtask-count">${subtasks.length} subtask${subtasks.length > 1 ? 's' : ''}</span>` : ''}
+            <div class="subtask-container">
+                <div class="todo-item parent-task ${todo.completed ? 'completed' : ''}" data-id="${todo.id}" data-parent="${todo.parentTaskId || ''}">
+                    <div class="todo-checkbox ${todo.completed ? 'checked' : ''}" data-action="toggle"></div>
+                    <div class="todo-content">
+                        <div class="todo-main">
+                            <span class="todo-text ${todo.completed ? 'completed' : ''}" data-action="edit">${this.escapeHtml(todo.text)}</span>
+                            <div class="todo-actions-btn">
+                                ${parentActions}
+                                <button class="edit-btn" data-action="edit">Edit</button>
+                                <button class="delete-btn" data-action="delete">Delete</button>
+                            </div>
+                        </div>
+                        <div class="todo-meta">
+                            ${assignee ? `<span class="assigned-to">Assigned to: ${this.escapeHtml(assignee.name)}</span>` : ''}
+                            ${creator && creator.id !== todo.assignedTo ? `<span class="created-by">Created by: ${this.escapeHtml(creator.name)}</span>` : ''}
+                            ${subtasks.length > 0 ? `<span class="subtask-count">${subtasks.length} subtask${subtasks.length > 1 ? 's' : ''}</span>` : ''}
+                        </div>
+                        ${progressHtml}
+                    </div>
                 </div>
-                <div class="todo-actions-btn">
-                    <button class="edit-btn" data-action="edit">Edit</button>
-                    <button class="delete-btn" data-action="delete">Delete</button>
+                ${subtasksHtml}
+            </div>
+        `;
+    }
+
+    // Create HTML for subtask item (simplified, without nested subtasks)
+    createSubtaskHTML(todo) {
+        const assignee = this.getUserById(todo.assignedTo);
+        const creator = this.getUserById(todo.createdBy);
+        
+        return `
+            <li class="todo-item ${todo.completed ? 'completed' : ''}" data-id="${todo.id}" data-parent="${todo.parentTaskId || ''}">
+                <div class="todo-checkbox ${todo.completed ? 'checked' : ''}" data-action="toggle"></div>
+                <div class="todo-content">
+                    <div class="todo-main">
+                        <span class="todo-text ${todo.completed ? 'completed' : ''}" data-action="edit">${this.escapeHtml(todo.text)}</span>
+                        <div class="todo-actions-btn">
+                            <button class="edit-btn" data-action="edit">Edit</button>
+                            <button class="delete-btn" data-action="delete">Delete</button>
+                        </div>
+                    </div>
+                    <div class="todo-meta">
+                        ${assignee ? `<span class="assigned-to">Assigned to: ${this.escapeHtml(assignee.name)}</span>` : ''}
+                        ${creator && creator.id !== todo.assignedTo ? `<span class="created-by">Created by: ${this.escapeHtml(creator.name)}</span>` : ''}
+                    </div>
                 </div>
             </li>
         `;

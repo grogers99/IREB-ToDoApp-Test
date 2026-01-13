@@ -54,6 +54,15 @@ The IREB ToDo Application now supports **simulated multi-user functionality** en
 - **Team View**: Toggle between personal and team views (managers only)
 - **Subtask Support**: Data model supports parent/child task relationships
 
+### ✅ Subtask Management (NEW)
+- **Subtask Creation**: Add subtasks via modal with title and assignee selection
+- **Custom Assignment**: Subtasks can be assigned to different users than parent task
+- **Subtask Editing**: Edit subtask title and reassign via modal
+- **Visual Nesting**: Subtasks indented and displayed with light gray background
+- **Progress Tracking**: Progress bar showing subtask completion status
+- **Cascade Delete**: Deleting parent removes all associated subtasks
+- **Single-Level Only**: Subtasks cannot have nested subtasks (enforced)
+
 ## What's Left to Build: NONE (Core Application Complete)
 
 The todo application meets all requirements specified in the project brief. No additional features are needed for the core functionality.
