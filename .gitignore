@@ -1,0 +1,12 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/IREB-ToDoApp-Test/CopilotIndices
+/.vs/IREB-ToDoApp-Test/copilot-chat/62cc469d/sessions
+/.vs/IREB-ToDoApp-Test/FileContentIndex
+/todo-app/.vs/todo-app/CopilotIndices/17.14.1431.25910
+/todo-app/.vs/todo-app
+/todo-app/.vs
+/.vs
+/.gitignore
