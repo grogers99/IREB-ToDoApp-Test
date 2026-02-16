@@ -47,38 +47,83 @@ We set out the following aims for our project:
 1. Can AI Agents be used as additional/replacement stakeholders?
 
 ## Project Setup and Tools
-Visual studio (html, javascript, markdown), Cline (with Memory Bank, Claude as base model), Copilot, Github (Project/Issues, Github Pages), Render, Agent technology?
+- after experimenting with several alternatives (GPT, Bolt, Vercel) we selected to work within Visual Studio to create prototypes. AI support was provided both by CoPilot (with GPT-5 mini as configured LLM) and then by Cline (https://docs.cline.bot/introduction/welcome), which was installed as an extension (available for Linux version of VS) and which in turn used Claude as the underlying LLM.
+- The prototype itself was generated as a front-end web application with HTML and Javascript. 
+- Github was used as a repository and Github Projects as a backlog and issue management tool. 
+- The app was deployed either using Github Pages or later with Render. 
 
 ## Results
-- pros and cons of overly simplistic, well understood project
-- pros and cons of conversing with AI within a coding IDE
-- Cline able to generate comprehensive (sometimes verbose) documentation in addition to code itself
-- Cline and copilot able to generate functioning frontend prototypes
-- Some requirements imply design changes which can significantly increase the complexity of the prototype
-- Decisions concerning click dummies versus architectural/design prototypes...
-- Cline can quickly move in its own direction, after which it is difficult to return it to the original intention
-- Necessity of working in small increments, and working in a logical sequence
-- Possibility of working with separate branches to limit complexity, though might be confusing for stakeholders
-- Higher-level, goal-oriented prompts/requirements work better than lower-level, system requirements
+The project repository containing all code and documentation can be found here: https://github.com/grogers99/IREB-ToDoApp-Test. Instructions on how to check out and deploy and contained in the Readme.
 
-## Links to deliverables:
-- github repo, working prototype, memory bank docs, this report, miro
+We experimented will different code branches for a purely front-end prototype (repository: https://github.com/grogers99/IREB-ToDoApp-Test/tree/frontend; deployed here: https://grogers99.github.io/IREB-ToDoApp-Test/) and a more sophisticated model which simulated a multi-user solution (repository: https://github.com/grogers99/IREB-ToDoApp-Test/tree/spring-boot-test; deployed here: https://ireb-todoapp-test.onrender.com/).
+
+The AI-generated documentation (Cline Memory Bank) consists of six files:
+- **[Project Brief](memory-bank/projectbrief.md)** - Defines project scope, core requirements and goals
+- **[Product Context](memory-bank/productContext.md)** - Why this project exists, problems it solves, and user needs
+- **[Active Context](memory-bank/activeContext.md)** - Current work focus, recent changes and next steps
+- **[Progress](memory-bank/progress.md)** - Current status, completed features, and known issues
+- **[System Patterns](memory-bank/systemPatterns.md)** - Architecture patterns and design decisions
+- **[Tech Context](memory-bank/techContext.md)** - Technical constraints, technologies used and dependencies
+
+Links to the respective files for each of the branches can also be found in the Readmes.
+
+
+
+## Results 
+
+### General
+- the tested AI's were well capable of generating convincing working front-end prototypes for typical ToDo app functionality, mostly on the basis of minimal prompting ('Generate a basic todo web application')
+- the AI's supported iterative and incremental development, for example adding task categorisation or prioritisation to basic task management, and retaining existing functionality and project context
+- high-level prompting (eg. 'I would like to add task prioritisation to my todo application') was sufficient; lower-level, solution-oriented requirements (eg. 'When a new task is created the user shall be able to set the task priority', 'when editing an existing task the user shall be able to modify task priority' etc.) seemed largely superfluous, as the AI was able to intuit such elements, often better (with greater thoroughness) than the requirements engineer!
+- at least within this well-understood domain the AI was frequently able to suggest potential new requirements (e.g. due dates and reminders, categories or tags, sub-tasks or nested todo's) even before being prompted to do so
+- Cline was able to generate comprehensive (at times overly verbose) project documentation, covering both technical design and *requirements*. The requirements consisted of a Problem Statement, Target User Profiles, Needs and Goals (see **[Product Context](memory-bank/productContext.md)**) as well as Functional, Technical and User Experience Requirements (see **[Project Brief](memory-bank/projectbrief.md)**). These requirements were in part derived from prompts fed to the AI, but to a larger part hypothesised and expanded upon by the AI itself. Once again, at least in a well-understood domain such as this, the requirements were credible and thorough.
+- we therefore had a 3-way relationship among the following elements: prompts; requirements; protoype (code) - where the all of the following transitions were possible:
+  1. the protoype (code) could be generated from prompts (possibly using documentation as context)
+  1. requirements could be generated from prompts (using code as context)
+  1. requirements could be manually created and modified and these in turn used by further prompting to generate code.
+
+### Risks and Issues
+- as the complexity of the prototype increased, the likelihood of errors in the prototype (eg. buttons not working due to glitches initialising the event handling) also gradually increased. In general the AI was able to fix such issues itself, once instructed to do so.
+- Cline in particular showed a tendency to make more wholesale changes than were strictly requested, and at times to follow its own design decisions. An example was a particular prototype that was using a posgres DB, with Cline repeatedly switching to an in-memory storage option due to problems connecting. The *act mode* especially had to be used with caution: it was usually better to work in *plan* mode until the approach was clear and only switching to *act* later.
+- If the AI did did go in the wrong design direction, it was not always straightforward to revert back. While UI glitches were generally fixed quickly, fixing deeper design errors could rapidly become a time-consuming activity with the AI tending to generate more and more code and complexity increasing. It therefore seemed sensible to work with source control and backups as well as to use separate branches to explore more complex topics.
+- It was important to differentiate between prompting for incremental improvement within an existing design (e.g. add a feature such as priorities or due dates within the front end app design) and prompts which implied a design change e.g. 'It should be possible to assign a task to a team member', which implied user management and logins and more generally a frontend/backend application. In the latter case, it was useful to first talk through design options with the AI e.g. build a working backend prototype, or simulate a multi-user environment with a dropdown within the simple front-end solution.
+- A key skill of the prototyper was therefore to choose appropriate increments, or prototyping iterations, and to recognise requirements that implied significant design changes, choosing an appropriate prototyping strategy (full working model, simulation) in these cases.
 
 ## Conclusions
-- must differentiate among different possible goals of prototyping: elicitation & validation with stakeholders, technical feasibility, UI/UX design, architecture design, etc.
-- define boundary between prototype and development of production system
-- prerequisites (goal definition, stakeholder identification, constraints, system context) are as (or perhaps more) relevant as before
+
+The ToDo app project was a useful experiment in the use of AI tools for prototyping. While the simplicity of the subject matter allowed us to focus on the tools and the lightweight requirements process that we employed, it was at the same time a limitation in that working in this well-understood domain did not push AI to the limits of its training. Nevertheless, the capabilities of AI to generate functional prototypes running to thousands of lines of code were clear, and that this could be achieved on the basis of high-level prompting only.
+
+Even in our ficititious project scenario the typical prerequisites for any requirements process - goal setting, stakeholder identification and roles of participants in the process, stating of technical and process constraints - were just as significant in an AI Prototyping process as otherwise. Perhaps even more so, as working with AI can quickly gather momentum in a particular direction, after which changing course may become difficult if this direction was not properly aligned with goals. Establishing a clean project start, with the right context for the AI to work, the correct setup in terms of tools and the right stakeholders to validate results seems therefore to be one key role for the Requirements Engineer within such a process.
+
+Secondly knowing where to stop may be equally important. What are the goals of a prototyping process? A validated set of requirements, an agreed upon UI design or a working design for the solution that can feed directly into development? In our experiment we stated our primary goal as the validation of requirements, which meant we could step back from developing prototypes which moved too far into final product design where the complexity might quickly become difficult to manage. Other approaches are feasible: setting clear goals for prototyping and knowing the right point to switch to development of the final product, though, seem also to be key skills for the Requirements Engineer here.
+
+In our particular project setup there were clear advantages to working directly within an IDE such as Visual Studio. Here, the context of the prototype could always be unequivocally reestablished from the code itself - which would seem to overcome any lack of precision in a natural language dialogue with the AI, as well as the context window limits of particular AI's. The coexistence of code and AI dialogue also allowed other opportunities to fine-tune the results, without the need for switching tools, at least for those with requisite coding skills. Conversely, this approach places new demands on the Requirements Engineer, for whom the environment will be most comfortable and the advantages of most benefit if they have a more technical skillset than is perhaps typical today.
+
+Working with a software engineering AI such as Cline provides another level of context information in form of documented goals, design decisions, user profiles. In our experiment the requirements generated by the AI were highly credible, and it was instructive for a skilled Requirements Engineer to reflect on these as an impulse to discussions with real stakeholders. The danger, on the other hand, is that such generated, hypothetical requirements might simply be accepted as the truth (though no stakeholder has ever explicitly stated them!) and used as a box-ticking exercise in generating project documentation. We also noted that the generated documentation tended copious and at times overly verbose, and may in fact create as much work as it saves.
+
+
 - boundaries to complexity of prototype: active context of AI, time taken to generate, explainability to operators/stakeholders, AI resources/costs, bugs/internal stability
 - RE and system development to be seen as a learning process
-- 
+- - pros and cons of overly simplistic, well understood project
+- pros and cons of working with different code branches
+- difficulty of understanding difference between prototype and final product
+
+In summary, then, AI-assisted prototyping is undoubtedly a powerful new tool in the requirement engineer's toolset. Creating such prototypes does not require exhaustive lists of detailed user interface requirements: indeed, once validated the prototype itself provides an alternative and in many ways more comprehensive expression of such requirements than traditional textual requirements. In this sense at least, prototyping with AI offers an alternative to some particular RE activities.
+
+Even with AI, developing a prototype iteratively and in meaningful increments requires an understanding of the relative priorities of requirements (in the general sense), their interdependencies and their potential impacts on the prototype design. Without this the prototype may quickly become weighed down under its own complexity. Many of the skills and techniques of the requirements engineer - stakeholder management, identification of goals, task prioritisation and iteration planning - are just as valuable in this process as they ever were. Furthermore, the goals of stakeholders and scope and design decisions made during the prototyping process are not necessarily evident from the prototype alone. These artifacts are likely to be valuable for the development of the final product, and it is therefore our view that requirements documentation of this nature is not replaced by the use of AI tools in a prototyping process - though we note that AI may also be able to assist in creating such documents. 
+
+
+- offers benefits and carries risks: key to state purpose of prototyping and understand start and end conditions.
+- requirements documentation, prompt history and AI dialogue, and the prototype itself (code and executable) exist in a 3-way relationship, which if managed correctly can be powerful and mutually beneficial. Creating the right project setup with AI and matching RE skillset seems key.
+
+Topics for further investigation:
+- use of agents
+- less well-known domains, other scaling factors
+- ...
 
 
 
 
 
-### Documentation Alignment (Current Session)
-**Status**: In Progress - Aligning all project documentation with updated project brief
-**Goal**: Ensure consistent messaging about AI-assisted development and requirements engineering focus
-**Progress**: Major documentation updates completed, cross-reference validation in progress
-- ✅ CRUD operations working perfectly
-- ✅ localStorage persistence implemented
+
+
