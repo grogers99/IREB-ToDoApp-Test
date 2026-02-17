@@ -52,7 +52,13 @@ We set out the following aims for our project:
 - Github was used as a repository and Github Projects as a backlog and issue management tool. 
 - The app was deployed either using Github Pages or later with Render. 
 
+## Method
+The project ran for a period of months with a core team of 6-8 participants and some other peripheral attendees on calls. We met in virtual meetings initially every two weeks and later monthly. After initial, more theoretical discussions we assigned roles to the group members such as customer, prototyper/requirements engineer or tool expert. The customers were then able to communicate their needs, wishes and ideas either during meetings or offline as Github issues. The prototyper intermittently developed prototypes and deployed these for testing as described above. Virtual meetings were a mix of role-playing within the fictitious project and brainstorming and reflection on the meta-goals of the project: i.e. what we were learning about the impact of AI on RE and what we should investigate next.
+
+
 ## Results
+
+### Deliverables
 The project repository containing all code and documentation can be found here: https://github.com/grogers99/IREB-ToDoApp-Test. Instructions on how to check out and deploy and contained in the Readme.
 
 We experimented will different code branches for a purely front-end prototype (repository: https://github.com/grogers99/IREB-ToDoApp-Test/tree/frontend; deployed here: https://grogers99.github.io/IREB-ToDoApp-Test/) and a more sophisticated model which simulated a multi-user solution (repository: https://github.com/grogers99/IREB-ToDoApp-Test/tree/spring-boot-test; deployed here: https://ireb-todoapp-test.onrender.com/).
@@ -68,10 +74,7 @@ The AI-generated documentation (Cline Memory Bank) consists of six files:
 Links to the respective files for each of the branches can also be found in the Readmes.
 
 
-
-## Results 
-
-### General
+### General Observations
 - the tested AI's were well capable of generating convincing working front-end prototypes for typical ToDo app functionality, mostly on the basis of minimal prompting ('Generate a basic todo web application')
 - the AI's supported iterative and incremental development, for example adding task categorisation or prioritisation to basic task management, and retaining existing functionality and project context
 - high-level prompting (eg. 'I would like to add task prioritisation to my todo application') was sufficient; lower-level, solution-oriented requirements (eg. 'When a new task is created the user shall be able to set the task priority', 'when editing an existing task the user shall be able to modify task priority' etc.) seemed largely superfluous, as the AI was able to intuit such elements, often better (with greater thoroughness) than the requirements engineer!
